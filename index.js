@@ -1,6 +1,20 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+const connection = require('./database/database')
+const perM = require('./database/Pergunta')
+
+//database
+
+connection
+.authenticate().
+then(()=>{
+  console.log('coxexao com db is sucesss')
+})
+.catch((msgErro) => {
+  console.log('erro ')
+})
+
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
