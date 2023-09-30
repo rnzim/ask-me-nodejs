@@ -1,21 +1,31 @@
 <%- include('partials/header.ejs') %> 
 <%- include('partials/navbar.ejs') %>
 <body>
+   
    <div class="container">
-     <div class="card">
+    
+        <h1>Resposta</h1>
+         <hr>
         <% id.forEach(id =>{ %>
-     
+             
       
-        <div class="card-header">
-            <%= id.titulo %>
-        </div>
-            <%= id.desc %>
-        <div class="card-body">
+       
+         <h3><%= id.titulo %> </h1>  
+     <hr>
+           <p><%= id.desc %></p> 
+       <hr>
             
-            <% }) %>
-        </div>
-     </div>
-     
+          
+       
+ 
+     <form action="/responder" method="post">
+        <h4>Responda</h4>
+        <textarea class="form-control" name="corpo"></textarea>
+        <hr>
+        <input name="idPe" type="hidden" value="<%=id.id%>">
+        <% }) %>
+        <button class="btn btn-success">Responder</button>
+     </form>
    </div> 
 </body>
 </html>

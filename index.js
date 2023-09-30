@@ -3,6 +3,7 @@ const app = express()
 const bodyParser = require('body-parser')
 const connection = require('./database/database')
 const Pergunta = require('./database/Pergunta')
+const Resposta = require('./database/Resposta')
 
 //database
 
@@ -43,21 +44,39 @@ app.get('/perguntar',(req,res)=>{
 app.get('/',(req,res)=>{
   Pergunta.findAll(({raw:true, order: [['id','desc']]})).then((perguntas)=>{
     res.render('index.ejs',{
-      perguntas:perguntas
+      perguntas:perguntas,
+      
     })
   })
 })
 app.get("/p/:id",(req,res)=>{
   var id = req.params.id
  
-   Pergunta.findAll({raw:true,
+   Pergunta.findAll({
     where: {
       id:id 
     }
    }).then((id)=>{
+      if(id != undefined){
       res.render('resposta.ejs',{id:id})
       console.log(id)
+    }else{
+      res.render('resposta.ejs',{id:"Pergunta não Encontrada, tente novemente"})
+    }
    })
+})
+app.post('/responder',(req,res)=>{
+   var corpo = req.body.corpo
+   var idPergunta = req.body.idPe
+   Resposta.create(
+    {
+      corpo:corpo,
+      idPergunta:idPergunta
+    }
+   ).then(()=>{
+    console.log("alguem respondeu")
+   })
+   res.redirect('/p/'+idPergunta)
 })
 
 app.listen(12,()=>{ console.log('\u001b[32mRuning \u001b[32mServer') })
