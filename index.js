@@ -2,7 +2,7 @@ const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const connection = require('./database/database')
-const perM = require('./database/Pergunta')
+const Pergunta = require('./database/Pergunta')
 
 //database
 
@@ -25,16 +25,39 @@ app.use(express.static('public'))
 app.post("/salvar",(req,res)=>{
   var titulo = req.body.titulo
   var desc = req.body.desc
-  console.log('recebi os dados: '+ titulo + ' '+ desc)
-  res.send('recebi os dados: '+ titulo + ' '+ desc)
+  
+  Pergunta.create({
+    titulo: titulo,
+    desc: desc
+  }).then(()=>{
+    res.redirect("/")
+  })
+ 
+  
 })
-app.get('/peguntar',(req,res)=>{
+
+app.get('/perguntar',(req,res)=>{
  
    res.render('perguntar')
 })
 app.get('/',(req,res)=>{
-
-  res.render('index.ejs')
-
+  Pergunta.findAll(({raw:true, order: [['id','desc']]})).then((perguntas)=>{
+    res.render('index.ejs',{
+      perguntas:perguntas
+    })
+  })
 })
+app.get("/p/:id",(req,res)=>{
+  var id = req.params.id
+ 
+   Pergunta.findAll({raw:true,
+    where: {
+      id:id 
+    }
+   }).then((id)=>{
+      res.render('resposta.ejs',{id:id})
+      console.log(id)
+   })
+})
+
 app.listen(12,()=>{ console.log('\u001b[32mRuning \u001b[32mServer') })

@@ -15,3 +15,5 @@ const Pergunta = connection.define('perguntas',
    }
 )
 Pergunta.sync({force: false}).then(()=>{console.log('\u001b[34m table created')})
+
+module.exports = Pergunta
