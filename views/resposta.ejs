@@ -6,13 +6,13 @@
     
         <h1>Resposta</h1>
          <hr>
-        <% id.forEach(id =>{ %>
+        <% pergunta.forEach(pergunta =>{ %>
              
       
        
-         <h3><%= id.titulo %> </h1>  
+         <h3><%= pergunta.titulo %> </h1>  
      <hr>
-           <p><%= id.desc %></p> 
+           <p><%= pergunta.desc %></p> 
        <hr>
             
           
@@ -22,10 +22,24 @@
         <h4>Responda</h4>
         <textarea class="form-control" name="corpo"></textarea>
         <hr>
-        <input name="idPe" type="hidden" value="<%=id.id%>">
+        <input name="idPe" type="hidden" value="<%=pergunta.id%>">
         <% }) %>
         <button class="btn btn-success">Responder</button>
      </form>
+   
+     <% resposta.forEach(resposta =>{ %>
+      <hr>
+      <div class="card">
+          <div class="card-header">
+           
+                  <%= resposta.corpo %>
+                
+          </div>   
+  
+          </div>
+        
+     <br>
+    <% }) %>
    </div> 
 </body>
 </html>

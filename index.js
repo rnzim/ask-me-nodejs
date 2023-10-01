@@ -20,13 +20,19 @@ then(()=>{
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
+//define a view engine
 app.set('view engine','ejs')
+
+//pasta de arquivos estaticos
 app.use(express.static('public'))
 
+//cria uma rota com o methodo post onde recebe o titulo
+//ea descrição de um formulario do metodo post
 app.post("/salvar",(req,res)=>{
   var titulo = req.body.titulo
   var desc = req.body.desc
   
+  //cria a tabela de perguntas
   Pergunta.create({
     titulo: titulo,
     desc: desc
@@ -36,12 +42,13 @@ app.post("/salvar",(req,res)=>{
  
   
 })
-
+//rota
 app.get('/perguntar',(req,res)=>{
  
    res.render('perguntar')
 })
 app.get('/',(req,res)=>{
+  //lista as perguntas da tabela perguntas
   Pergunta.findAll(({raw:true, order: [['id','desc']]})).then((perguntas)=>{
     res.render('index.ejs',{
       perguntas:perguntas,
@@ -56,13 +63,22 @@ app.get("/p/:id",(req,res)=>{
     where: {
       id:id 
     }
-   }).then((id)=>{
-      if(id != undefined){
-      res.render('resposta.ejs',{id:id})
-      console.log(id)
-    }else{
-      res.render('resposta.ejs',{id:"Pergunta não Encontrada, tente novemente"})
-    }
+   }).then((pergunta)=>{
+    
+        Resposta.findAll({raw:true,
+        where: {idPergunta:id},
+        order:[
+            ['id','desc']
+          ]
+        
+      }).then((resposta)=>{
+        console.log(resposta)
+
+        res.render('resposta.ejs',{pergunta:pergunta,resposta:resposta})
+       
+     })
+     
+    
    })
 })
 app.post('/responder',(req,res)=>{
@@ -79,4 +95,4 @@ app.post('/responder',(req,res)=>{
    res.redirect('/p/'+idPergunta)
 })
 
-app.listen(12,()=>{ console.log('\u001b[32mRuning \u001b[32mServer') })
+app.listen(3000,()=>{ console.log('\u001b[32mRuning \u001b[32mServer') })
